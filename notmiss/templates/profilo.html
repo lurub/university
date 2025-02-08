@@ -1,0 +1,80 @@
+{% extends 'base2.html' %}
+{% block title %}
+<title>NotMiss: pagina personale</title>
+{% endblock %}
+{% block main %}
+{% if session['_id'] %}
+<script>
+    $.ajax({
+        url: '/profilo',
+        method: 'POST',
+        success: function (info){
+        $("#nome").text(info['nome'])
+        $("#cognome").text(info['cognome'])
+        $("#email").text(info['email'])
+        $("#DatadiNascita").text(info['data'])
+        $("#Sesso").text(info['sex'])
+        $("#evCreati").text(info['EvCreati'])
+            if (info['numEV'] > 0 ){
+                obj = info['EV']
+                let i = 0
+                tmp = obj[i]
+                while (typeof tmp != 'undefined'){
+                    let newDiv = '<div class="container mt-5 mb-5 col-12 text-center"> <div class="row"> <div class="col-12 text-center"> <p><span id="_id"></span><span class="nome"></span> di <span class=\'nomeCreatore\'></span> <span class="cognomeCreatore"></span></p> </div> </div> </div>'
+                    $('#append').append(newDiv)
+                    $("#id").attr("_id",tmp['_id'])
+                    $(".nome").attr("class",tmp['nome']).text(tmp['nome'])
+                    $(".nomeCreatore").attr("class",tmp['nomeCreatore']).text(tmp['nomeCreatore'])
+                    $(".cognomeCreatore").attr("class",tmp['cognomeCreatore']).text(tmp['cognomeCreatore'])
+                    $('.riepilogo').removeClass('_ds-none')
+                    i = i + 1
+                    tmp = obj[i]
+                }
+            }
+        }
+    })
+
+</script>
+<div class="container mt-5 mb-5 col-12 " id="padre" >
+    <div class="row" id="padre_login">
+        <div class="col-8 offset-2 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-4 offset-lg-4 text-left _divAccedi fadeIn2" id="login">
+            <div style="font-size: 1.5rem">
+              <h1 style="margin-top: 20px;" class="text-center text-black-50">Riepilogo account</h1>
+              <div class="m-2"><strong>Nome:</strong> <span id="nome"></span> </div>
+              <div class="m-2"><strong>Cognome:</strong> <span id="cognome"></span></div>
+              <div class="m-2"><strong>Email:</strong> <span id="email"></span></div>
+              <div class="m-2"><strong>Data di nascita:</strong> <span id="DatadiNascita"></span></div>
+              <div class="m-2"><strong>Sesso:</strong> <span id="Sesso"></span></div>
+              <div class="m-2 mb-3"><strong>Numero di eventi creati:</strong> <span id="evCreati"></span></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="riepilogo _ds-none col-8 offset-2 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-4 offset-lg-4 text-left _divAccedi fadeIn2" style="font-size: 1.5rem">
+  <h1 style="margin-top: 20px;" class="text-center text-black-50">Riepilogo eventi</h1>
+    <h3 class="text-center text-black-50">(a cui partecipi)</h3>
+    <div id="append" class="pb-3"></div>
+</div>
+
+
+
+
+{% else %}
+<div class="container mt-5 mb-5 col-12">
+  <div class="row">
+      <div class="col-8 offset-2 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-4 offset-lg-4 text-center" style="z-index: 100">
+        <h4> Devi prima effettuare l'accesso! <br> Stai per essere indirizzato alla pagina di Login</h4>
+      </div>
+  </div>
+</div>
+
+
+<script>
+  setTimeout(function (){
+    window.location.replace("/accedi")
+  },3000)
+</script>
+{% endif %}
+{% endblock %}
